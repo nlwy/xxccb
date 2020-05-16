@@ -4,11 +4,255 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>明道云自动化流程代码</title>
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/styles/atom-one-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+
+  </script>
+  <style>
+    textarea {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    button {
+      background: lightseagreen;
+      border: none;
+      color: #fff;
+      border: 0;
+      border-radius: 30px;
+      line-height: 30px;
+      width: 80px;
+    }
+
+    button:active {
+      background: turquoise;
+      outline: transparent;
+    }
+
+  </style>
 </head>
 
 <body>
-  wx:y_4132
+
+  <h2>自动化代码</h2>
+  <pre><code class="js">使用方法：打开浏览器 -> 开发者工具 -> 控制台 -> 粘贴代码 -> 点击确定</code></pre>
+  <h3>1.流程新增记录自动化选择代码。</h3>
+  <button class="btn" data-clipboard-action="cut" data-clipboard-target="#js1">一键复制</button>
+  <textarea id="js1">$(".workflowDetailBox > .relative").each((index, item) => {
+      const value = $(item).find('.mTop15.ellipsis.Font13').html()
+      $(item).find('.actionControlMore.ThemeColor3.tip-bottom-left').click()
+      $(item).find('.conditionFieldBox').removeClass('show').find('li').each((index, itemLi) => {
+        if ($(itemLi).text().indexOf(value) !== -1) {
+          $(itemLi).click()
+        }
+      })
+    })</textarea>
+  <pre><code class="js" id="js1">
+    $(".workflowDetailBox > .relative").each((index, item) => {
+      const value = $(item).find('.mTop15.ellipsis.Font13').html()
+      $(item).find('.actionControlMore.ThemeColor3.tip-bottom-left').click()
+      $(item).find('.conditionFieldBox').removeClass('show').find('li').each((index, itemLi) => {
+        if ($(itemLi).text().indexOf(value) !== -1) {
+          $(itemLi).click()
+        }
+      })
+    })
+  </code></pre>
+  <h3>2.流程更新记录自动化选择代码。</h3>
+  <button class="btn" data-clipboard-action="cut" data-clipboard-target="#js2">一键复制</button>
+  <textarea id="js2">"use strict";
+
+    var index = {
+      init: function init() {
+        this.number = 0;
+        this.length = 100;
+        this.time = 100; //触发时间
+    
+        this.addItem();
+        console.log("%c \u81EA\u52A8\u5316\u5F00\u59CB\uFF01\u89E6\u53D1\u65F6\u95F4".concat(this.time, "\u6BEB\u79D2\u3002"), 'color: green');
+      },
+      //添加字段   
+      addItem: async function addItem() {
+        this.addButtonDiv = $('.addActionBtn.mTop25');
+        this.addButton = this.addButtonDiv.find('.ThemeBorderColor3');
+        this.addButton.click();
+        await this.selectAction(this.addButtonDiv.prev()); //选择字段
+    
+        await this.selectMenu(); //确定字段
+    
+        await this.setTo(this.addButtonDiv.prev()); //设为  
+    
+        await this.selectPeople(this.addButtonDiv.prev()); //选择人员
+    
+        this.number++;
+        console.log("%c ***** \u6B63\u5728\u6DFB\u52A0\u7B2C".concat(this.number, "\u4E2A\u5B57\u6BB5,\u4E00\u5171").concat(this.length, "\u4E2A\u5B57\u6BB5! *****"), 'color: red');
+        this.number < this.length && this.addItem();
+      },
+      //选择字段
+      selectAction: function selectAction(dom) {
+        var _this = this;
+    
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              dom.find('.Dropdown--input.Dropdown--border').click();
+            }());
+          }, _this.time);
+        });
+      },
+      //确定字段
+      selectMenu: function selectMenu() {
+        var _this2 = this;
+    
+        var that = this;
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              _this2.length = $('.ming.Menu.ming.List li').length;
+              var dom = $('.ming.Menu.ming.List li').eq(that.number);
+              that.value = dom.text();
+              dom.click();
+            }());
+          }, _this2.time);
+        });
+      },
+      //设为  
+      setTo: function setTo(dom) {
+        var _this3 = this;
+    
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              dom.find('.actionControlMore.ThemeColor3.tip-bottom-left').click();
+            }());
+          }, _this3.time);
+        });
+      },
+      //选择人员
+      selectPeople: function selectPeople(dom) {
+        var _this4 = this;
+    
+        var that = this;
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              dom.find('.conditionFieldBox li').each(function (index, item) {
+                if ($(item).text() === _this4.value) {
+                  $(item).click();
+                }
+              });
+            }());
+          }, _this4.time);
+        });
+      }
+    };
+    index.init();</textarea>
+  <pre><code class="js">"use strict";
+
+    var index = {
+      init: function init() {
+        this.number = 0;
+        this.length = 100;
+        this.time = 100; //触发时间
+    
+        this.addItem();
+        console.log("%c \u81EA\u52A8\u5316\u5F00\u59CB\uFF01\u89E6\u53D1\u65F6\u95F4".concat(this.time, "\u6BEB\u79D2\u3002"), 'color: green');
+      },
+      //添加字段   
+      addItem: async function addItem() {
+        this.addButtonDiv = $('.addActionBtn.mTop25');
+        this.addButton = this.addButtonDiv.find('.ThemeBorderColor3');
+        this.addButton.click();
+        await this.selectAction(this.addButtonDiv.prev()); //选择字段
+    
+        await this.selectMenu(); //确定字段
+    
+        await this.setTo(this.addButtonDiv.prev()); //设为  
+    
+        await this.selectPeople(this.addButtonDiv.prev()); //选择人员
+    
+        this.number++;
+        console.log("%c ***** \u6B63\u5728\u6DFB\u52A0\u7B2C".concat(this.number, "\u4E2A\u5B57\u6BB5,\u4E00\u5171").concat(this.length, "\u4E2A\u5B57\u6BB5! *****"), 'color: red');
+        this.number < this.length && this.addItem();
+      },
+      //选择字段
+      selectAction: function selectAction(dom) {
+        var _this = this;
+    
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              dom.find('.Dropdown--input.Dropdown--border').click();
+            }());
+          }, _this.time);
+        });
+      },
+      //确定字段
+      selectMenu: function selectMenu() {
+        var _this2 = this;
+    
+        var that = this;
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              _this2.length = $('.ming.Menu.ming.List li').length;
+              var dom = $('.ming.Menu.ming.List li').eq(that.number);
+              that.value = dom.text();
+              dom.click();
+            }());
+          }, _this2.time);
+        });
+      },
+      //设为  
+      setTo: function setTo(dom) {
+        var _this3 = this;
+    
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              dom.find('.actionControlMore.ThemeColor3.tip-bottom-left').click();
+            }());
+          }, _this3.time);
+        });
+      },
+      //选择人员
+      selectPeople: function selectPeople(dom) {
+        var _this4 = this;
+    
+        var that = this;
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              dom.find('.conditionFieldBox li').each(function (index, item) {
+                if ($(item).text() === _this4.value) {
+                  $(item).click();
+                }
+              });
+            }());
+          }, _this4.time);
+        });
+      }
+    };
+    index.init();</code></pre>
+  <h3>持续更新中。。。。</h3>
+  <script>
+    var clipboard = new ClipboardJS('.btn');
+
+    clipboard.on('success', function (e) {
+      console.info('Action:', e.action);
+      console.info('Text:', e.text);
+      console.info('Trigger:', e.trigger);
+      e.trigger.innerText = '复制成功'
+      e.clearSelection();
+    });
+
+  </script>
 </body>
 
 </html>
