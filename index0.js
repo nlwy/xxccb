@@ -18,26 +18,6 @@ const index = {
     this.number < this.length ? this.addItem() : console.log(`%c ***** 自动化结束,一共用时${(this.number * this.time / 60).toFixed(2)}秒 *****`, 'color: green')
 
   },
-  //选择字段
-  selectAction(dom) {
-    return new Promise(resolve => {
-      setTimeout(() => resolve((() => {
-        dom.find('.Dropdown--input.Dropdown--border').click();
-      })()), this.time);
-    });
-  },
-  //确定字段
-  selectMenu() {
-    const that = this
-    return new Promise(resolve => {
-      setTimeout(() => resolve((() => {
-        this.length = $('.ming.Menu.ming.List li').length
-        const dom = $('.ming.Menu.ming.List li').eq(that.number)
-        that.value = dom.text()
-        dom.click()
-      })()), this.time);
-    });
-  },
   //设为  
   setTo(dom) {
     return new Promise(resolve => {
