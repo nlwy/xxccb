@@ -68,49 +68,21 @@
         console.log("%c ***** \u6B63\u5728\u6DFB\u52A0\u7B2C".concat(this.number, "\u4E2A\u5B57\u6BB5,\u4E00\u5171").concat(this.length, "\u4E2A\u5B57\u6BB5! *****"), 'color: red');
         this.number < this.length ? this.addItem() : console.log("%c ***** \u81EA\u52A8\u5316\u7ED3\u675F,\u4E00\u5171\u7528\u65F6".concat((this.number * this.time / 60).toFixed(2), "\u79D2 *****"), 'color: green');
       },
-      //选择字段
-      selectAction: function selectAction(dom) {
-        var _this = this;
-    
-        return new Promise(function (resolve) {
-          setTimeout(function () {
-            return resolve(function () {
-              dom.find('.Dropdown--input.Dropdown--border').click();
-            }());
-          }, _this.time);
-        });
-      },
-      //确定字段
-      selectMenu: function selectMenu() {
-        var _this2 = this;
-    
-        var that = this;
-        return new Promise(function (resolve) {
-          setTimeout(function () {
-            return resolve(function () {
-              _this2.length = $('.ming.Menu.ming.List li').length;
-              var dom = $('.ming.Menu.ming.List li').eq(that.number);
-              that.value = dom.text();
-              dom.click();
-            }());
-          }, _this2.time);
-        });
-      },
       //设为  
       setTo: function setTo(dom) {
-        var _this3 = this;
+        var _this = this;
     
         return new Promise(function (resolve) {
           setTimeout(function () {
             return resolve(function () {
               dom.find('.actionControlMore.ThemeColor3.tip-bottom-left').click();
             }());
-          }, _this3.time);
+          }, _this.time);
         });
       },
       //选择人员
       selectPeople: function selectPeople(dom) {
-        var _this4 = this;
+        var _this2 = this;
     
         var that = this;
         this.value = dom.find('.mTop15.ellipsis.Font13').text();
@@ -119,15 +91,15 @@
             return resolve(function () {
               var isFind = false;
               dom.find('.conditionFieldBox li').each(function (index, item) {
-                if ($(item).text().indexOf(_this4.value) !== -1) {
+                if ($(item).text().indexOf(_this2.value) !== -1) {
                   $(item).click();
                   isFind = true;
                   return true;
                 }
               });
-              if (!isFind) console.log("%c ***** \u672A\u627E\u5230[".concat(_this4.value, "]\u9009\u9879,\u8BF7\u624B\u52A8\u9009\u62E9\u3002*****"), 'color: yellow');
+              if (!isFind) console.log("%c ***** \u672A\u627E\u5230[".concat(_this2.value, "]\u9009\u9879,\u8BF7\u624B\u52A8\u9009\u62E9\u3002*****"), 'color: yellow');
             }());
-          }, _this4.time);
+          }, _this2.time);
         });
       }
     };
@@ -156,49 +128,21 @@
         console.log("%c ***** \u6B63\u5728\u6DFB\u52A0\u7B2C".concat(this.number, "\u4E2A\u5B57\u6BB5,\u4E00\u5171").concat(this.length, "\u4E2A\u5B57\u6BB5! *****"), 'color: red');
         this.number < this.length ? this.addItem() : console.log("%c ***** \u81EA\u52A8\u5316\u7ED3\u675F,\u4E00\u5171\u7528\u65F6".concat((this.number * this.time / 60).toFixed(2), "\u79D2 *****"), 'color: green');
       },
-      //选择字段
-      selectAction: function selectAction(dom) {
-        var _this = this;
-    
-        return new Promise(function (resolve) {
-          setTimeout(function () {
-            return resolve(function () {
-              dom.find('.Dropdown--input.Dropdown--border').click();
-            }());
-          }, _this.time);
-        });
-      },
-      //确定字段
-      selectMenu: function selectMenu() {
-        var _this2 = this;
-    
-        var that = this;
-        return new Promise(function (resolve) {
-          setTimeout(function () {
-            return resolve(function () {
-              _this2.length = $('.ming.Menu.ming.List li').length;
-              var dom = $('.ming.Menu.ming.List li').eq(that.number);
-              that.value = dom.text();
-              dom.click();
-            }());
-          }, _this2.time);
-        });
-      },
       //设为  
       setTo: function setTo(dom) {
-        var _this3 = this;
+        var _this = this;
     
         return new Promise(function (resolve) {
           setTimeout(function () {
             return resolve(function () {
               dom.find('.actionControlMore.ThemeColor3.tip-bottom-left').click();
             }());
-          }, _this3.time);
+          }, _this.time);
         });
       },
       //选择人员
       selectPeople: function selectPeople(dom) {
-        var _this4 = this;
+        var _this2 = this;
     
         var that = this;
         this.value = dom.find('.mTop15.ellipsis.Font13').text();
@@ -207,15 +151,15 @@
             return resolve(function () {
               var isFind = false;
               dom.find('.conditionFieldBox li').each(function (index, item) {
-                if ($(item).text().indexOf(_this4.value) !== -1) {
+                if ($(item).text().indexOf(_this2.value) !== -1) {
                   $(item).click();
                   isFind = true;
                   return true;
                 }
               });
-              if (!isFind) console.log("%c ***** \u672A\u627E\u5230[".concat(_this4.value, "]\u9009\u9879,\u8BF7\u624B\u52A8\u9009\u62E9\u3002*****"), 'color: yellow');
+              if (!isFind) console.log("%c ***** \u672A\u627E\u5230[".concat(_this2.value, "]\u9009\u9879,\u8BF7\u624B\u52A8\u9009\u62E9\u3002*****"), 'color: yellow');
             }());
-          }, _this4.time);
+          }, _this2.time);
         });
       }
     };
