@@ -365,7 +365,269 @@
       }
     };
     index.init();</code></pre>
-  <h3>持续更新中。。。。</h3>
+  <h3>3.获取产品名称列表</h3>
+  <button class="btn" data-clipboard-action="cut" data-clipboard-target="#js3">一键复制</button>
+  <textarea id="js3">"use strict";
+
+var index = {
+  init: function init() {
+    this.number = $('.main-right-grid .editableCellCon')[0].classList[2].split('-')[1];
+    this.productList = [];
+    this.addProductPicture();
+  },
+  //获取产品列表
+  addProductPicture: function addProductPicture() {
+    var table = $('.main-right-grid');
+    var row = table.find(".row-".concat(this.number, ".col-4"));
+    var text = row.find('span').text();
+
+    if (row.length !== 0) {
+      this.productList.push(text);
+      this.number++;
+      this.addProductPicture();
+    } else {
+      console.log(JSON.stringify(this.productList));
+    }
+  }
+};
+index.init();
+  </textarea>
+  <pre><code class="js">"use strict";
+
+    var index = {
+      init: function init() {
+        this.number = $('.main-right-grid .editableCellCon')[0].classList[2].split('-')[1];
+        this.productList = [];
+        this.addProductPicture();
+      },
+      //获取产品列表
+      addProductPicture: function addProductPicture() {
+        var table = $('.main-right-grid');
+        var row = table.find(".row-".concat(this.number, ".col-4"));
+        var text = row.find('span').text();
+    
+        if (row.length !== 0) {
+          this.productList.push(text);
+          this.number++;
+          this.addProductPicture();
+        } else {
+          console.log(JSON.stringify(this.productList));
+        }
+      }
+    };
+    index.init();
+  </code></pre>
+  <h3>4.获取图片列表(将3中获取的产品替换到this.values)</h3>
+  <button class="btn" data-clipboard-action="cut" data-clipboard-target="#js4">一键复制</button>
+  <textarea id="js4">"use strict";
+
+    var index = {
+      init: function init() {
+        //请将产品列表替换到这里     
+        this.values = [];
+        this.getProductList();
+        this.data = [];
+      },
+      // 获取 blob
+      getBlob: function getBlob(url, cb) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'blob';
+    
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            cb(xhr.response);
+          }
+        };
+    
+        xhr.send();
+      },
+      // 保存文件
+      saveAs: function saveAs(blob, filename, n, index) {
+        console.log("%c ****\u6B63\u5728\u4E0B\u8F7D\u7B2C".concat(n, "\u6761\u6570\u636E\u7B2C").concat(index, "\u6DA8\u56FE\u7247!****"), 'color: pink');
+    
+        if (window.navigator.msSaveOrOpenBlob) {
+          navigator.msSaveBlob(blob, filename);
+        } else {
+          var link = document.createElement('a');
+          var body = document.querySelector('body');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = filename; // fix Firefox
+    
+          link.style.display = 'none';
+          body.appendChild(link);
+          link.click();
+          body.removeChild(link);
+          window.URL.revokeObjectURL(link.href);
+        }
+    
+        ;
+        console.log("%c ****".concat(filename, "\u4E0B\u8F7D\u6210\u529F!****"), 'color:red');
+      },
+      // 下载文件
+      download: function download(url, filename, n, index) {
+        var that = this;
+        that.getBlob(url, function (blob) {
+          that.saveAs(blob, filename, n, index);
+        });
+      },
+      //获取产品信息
+      getProductList: async function getProductList() {
+        var _this = this;
+    
+        var data = JSON.stringify({
+          appId: 'a58e759f-8e1d-4dc9-b70a-4f86c98a27d5',
+          viewId: '5ea19a772fc9510001e27cc5',
+          worksheetId: '5ea19a772fc9510001e27cc4',
+          status: 1,
+          pageIndex: 1,
+          sortControls: [],
+          pageSize: 50,
+          keyWords: '',
+          searchType: 1,
+          filterControls: [{
+            controlId: '5ea1af554f222e0001d9fd8e',
+            dataType: 2,
+            spliceType: 1,
+            filterType: 1,
+            values: this.values
+          }],
+          isUnRead: false
+        });
+        console.log('%c ****获取图片信息开始****', 'color: green');
+        var dataList = await $.ajax({
+          type: "POST",
+          contentType: "application/json;charset=UTF-8",
+          url: 'https://www.mingdao.com/api/Worksheet/GetFilterRows',
+          data: data,
+          dataType: 'json'
+        }).then(function (data) {
+          return data.data.data;
+        });
+        console.log('%c ****开始下载图片****', 'color:red');
+        console.log("%c ****\u4E00\u5171".concat(dataList.length, "\u6761\u4EA7\u54C1****"), 'color:red');
+        dataList.forEach(function (item, n) {
+          var value = JSON.parse(item['5ea1af554f222e0001d9fd97']);
+          value.forEach(function (itemList, index) {
+            var ext = itemList.ext;
+            value[index] = itemList.previewUrl.split("?")[0];
+    
+            _this.download(value[index], "".concat(item['5ea1af554f222e0001d9fd8e'], "_").concat(index, ".").concat(ext), n + 1, index + 1);
+          });
+    
+          _this.data.push({
+            name: item['5ea1af554f222e0001d9fd8e'],
+            value: value
+          });
+        });
+      }
+    };
+    index.init();
+  </textarea>
+  <pre><code class="js">"use strict";
+
+    var index = {
+      init: function init() {
+        //请将产品列表替换到这里     
+        this.values = [];
+        this.getProductList();
+        this.data = [];
+      },
+      // 获取 blob
+      getBlob: function getBlob(url, cb) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'blob';
+    
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            cb(xhr.response);
+          }
+        };
+    
+        xhr.send();
+      },
+      // 保存文件
+      saveAs: function saveAs(blob, filename, n, index) {
+        console.log("%c ****\u6B63\u5728\u4E0B\u8F7D\u7B2C".concat(n, "\u6761\u6570\u636E\u7B2C").concat(index, "\u6DA8\u56FE\u7247!****"), 'color: pink');
+    
+        if (window.navigator.msSaveOrOpenBlob) {
+          navigator.msSaveBlob(blob, filename);
+        } else {
+          var link = document.createElement('a');
+          var body = document.querySelector('body');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = filename; // fix Firefox
+    
+          link.style.display = 'none';
+          body.appendChild(link);
+          link.click();
+          body.removeChild(link);
+          window.URL.revokeObjectURL(link.href);
+        }
+    
+        ;
+        console.log("%c ****".concat(filename, "\u4E0B\u8F7D\u6210\u529F!****"), 'color:red');
+      },
+      // 下载文件
+      download: function download(url, filename, n, index) {
+        var that = this;
+        that.getBlob(url, function (blob) {
+          that.saveAs(blob, filename, n, index);
+        });
+      },
+      //获取产品信息
+      getProductList: async function getProductList() {
+        var _this = this;
+    
+        var data = JSON.stringify({
+          appId: 'a58e759f-8e1d-4dc9-b70a-4f86c98a27d5',
+          viewId: '5ea19a772fc9510001e27cc5',
+          worksheetId: '5ea19a772fc9510001e27cc4',
+          status: 1,
+          pageIndex: 1,
+          sortControls: [],
+          pageSize: 50,
+          keyWords: '',
+          searchType: 1,
+          filterControls: [{
+            controlId: '5ea1af554f222e0001d9fd8e',
+            dataType: 2,
+            spliceType: 1,
+            filterType: 1,
+            values: this.values
+          }],
+          isUnRead: false
+        });
+        console.log('%c ****获取图片信息开始****', 'color: green');
+        var dataList = await $.ajax({
+          type: "POST",
+          contentType: "application/json;charset=UTF-8",
+          url: 'https://www.mingdao.com/api/Worksheet/GetFilterRows',
+          data: data,
+          dataType: 'json'
+        }).then(function (data) {
+          return data.data.data;
+        });
+        console.log('%c ****开始下载图片****', 'color:red');
+        console.log("%c ****\u4E00\u5171".concat(dataList.length, "\u6761\u4EA7\u54C1****"), 'color:red');
+        dataList.forEach(function (item, n) {
+          var value = JSON.parse(item['5ea1af554f222e0001d9fd97']);
+          value.forEach(function (itemList, index) {
+            var ext = itemList.ext;
+            value[index] = itemList.previewUrl.split("?")[0];
+    
+            _this.download(value[index], "".concat(item['5ea1af554f222e0001d9fd8e'], "_").concat(index, ".").concat(ext), n + 1, index + 1);
+          });
+    
+          _this.data.push({
+            name: item['5ea1af554f222e0001d9fd8e'],
+            value: value
+          });
+        });
+      }
+    };
+    index.init();</code></pre>
   <script>
     var clipboard = new ClipboardJS('.btn');
 
