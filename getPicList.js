@@ -1,6 +1,6 @@
 const index = {
   init() {
-    this.number = 0
+    this.number = $('.main-right-grid .editableCellCon')[0].classList[2].split('-')[1]
     this.time = 100
     // this.addProductPicture()
     // this.updateWorkSheetRow()

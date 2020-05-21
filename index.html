@@ -42,10 +42,15 @@
 
   <h2>自动化代码</h2>
   <hr>
-  <h4>最新版本：v1.0.2</h4>
-  <h4>更新日期：2020年05月17日12:30:42</h4>
+  <h4>最新版本：v1.0.4</h4>
+  <h4>更新日期：2020年05月21日16:01:52</h4>
   <pre><code class="text">
   更新日志
+  v1.0.4
+    1.新增上传图片/附件
+  v1.0.3
+    1.新增获取产品名称列表
+    2.新增图片/附件批量下载
   v1.0.2：
     1.优化了新增记录流程
     2.增加了未找到提示
@@ -417,16 +422,18 @@ index.init();
     };
     index.init();
   </code></pre>
-  <h3>4.获取图片列表(将3中获取的产品替换到this.values)</h3>
+  <h3>4.获取图片列表并批量下载图片(将3中获取的产品替换到this.values)</h3>
   <button class="btn" data-clipboard-action="cut" data-clipboard-target="#js4">一键复制</button>
   <textarea id="js4">"use strict";
 
     var index = {
       init: function init() {
         //请将产品列表替换到这里     
-        this.values = [];
+        this.values = ["雪花9号啤酒", "雪花啤酒瓶听喜力啤酒瓶听金威啤酒瓶听", "365全麦精酿啤酒", "痹痛冷敷贴"];
         this.getProductList();
         this.data = [];
+        this.number = 0;
+        this.time = 1000;
       },
       // 获取 blob
       getBlob: function getBlob(url, cb) {
@@ -443,9 +450,7 @@ index.init();
         xhr.send();
       },
       // 保存文件
-      saveAs: function saveAs(blob, filename, n, index) {
-        console.log("%c ****\u6B63\u5728\u4E0B\u8F7D\u7B2C".concat(n, "\u6761\u6570\u636E\u7B2C").concat(index, "\u6DA8\u56FE\u7247!****"), 'color: pink');
-    
+      saveAs: function saveAs(blob, filename) {
         if (window.navigator.msSaveOrOpenBlob) {
           navigator.msSaveBlob(blob, filename);
         } else {
@@ -465,10 +470,10 @@ index.init();
         console.log("%c ****".concat(filename, "\u4E0B\u8F7D\u6210\u529F!****"), 'color:red');
       },
       // 下载文件
-      download: function download(url, filename, n, index) {
+      download: function download(url, filename) {
         var that = this;
-        that.getBlob(url, function (blob) {
-          that.saveAs(blob, filename, n, index);
+        return that.getBlob(url, function (blob) {
+          that.saveAs(blob, filename);
         });
       },
       //获取产品信息
@@ -505,20 +510,37 @@ index.init();
           return data.data.data;
         });
         console.log('%c ****开始下载图片****', 'color:red');
-        console.log("%c ****\u4E00\u5171".concat(dataList.length, "\u6761\u4EA7\u54C1****"), 'color:red');
-        dataList.forEach(function (item, n) {
+        console.log("%c ****\u4E00\u5171".concat(dataList.length, "\u6761\u6570\u636E****"), 'color:red');
+        dataList.forEach(function (item) {
           var value = JSON.parse(item['5ea1af554f222e0001d9fd97']);
           value.forEach(function (itemList, index) {
-            var ext = itemList.ext;
-            value[index] = itemList.previewUrl.split("?")[0];
-    
-            _this.download(value[index], "".concat(item['5ea1af554f222e0001d9fd8e'], "_").concat(index, ".").concat(ext), n + 1, index + 1);
+            itemList.previewUrl = itemList.previewUrl.split("?")[0];
           });
     
           _this.data.push({
             name: item['5ea1af554f222e0001d9fd8e'],
             value: value
           });
+        });
+        this.downloadFile();
+      },
+      //下载文件   
+      downloadFile: async function downloadFile() {
+        await this.saveFile(this.data[this.number]);
+        this.number < this.data.length ? this.downloadFile() : console.log('%c ****下载最后一个商品附件****', 'color: green');
+      },
+      saveFile: function saveFile(list) {
+        var _this2 = this;
+    
+        this.number++;
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              list.value.forEach(function (item, index) {
+                _this2.download(item.previewUrl, "".concat(list.name, "_").concat(index).concat(item.ext));
+              });
+            }());
+          }, _this2.time);
         });
       }
     };
@@ -529,9 +551,11 @@ index.init();
     var index = {
       init: function init() {
         //请将产品列表替换到这里     
-        this.values = [];
+        this.values = ["雪花9号啤酒", "雪花啤酒瓶听喜力啤酒瓶听金威啤酒瓶听", "365全麦精酿啤酒", "痹痛冷敷贴"];
         this.getProductList();
         this.data = [];
+        this.number = 0;
+        this.time = 1000;
       },
       // 获取 blob
       getBlob: function getBlob(url, cb) {
@@ -548,9 +572,7 @@ index.init();
         xhr.send();
       },
       // 保存文件
-      saveAs: function saveAs(blob, filename, n, index) {
-        console.log("%c ****\u6B63\u5728\u4E0B\u8F7D\u7B2C".concat(n, "\u6761\u6570\u636E\u7B2C").concat(index, "\u6DA8\u56FE\u7247!****"), 'color: pink');
-    
+      saveAs: function saveAs(blob, filename) {
         if (window.navigator.msSaveOrOpenBlob) {
           navigator.msSaveBlob(blob, filename);
         } else {
@@ -570,10 +592,10 @@ index.init();
         console.log("%c ****".concat(filename, "\u4E0B\u8F7D\u6210\u529F!****"), 'color:red');
       },
       // 下载文件
-      download: function download(url, filename, n, index) {
+      download: function download(url, filename) {
         var that = this;
-        that.getBlob(url, function (blob) {
-          that.saveAs(blob, filename, n, index);
+        return that.getBlob(url, function (blob) {
+          that.saveAs(blob, filename);
         });
       },
       //获取产品信息
@@ -610,20 +632,299 @@ index.init();
           return data.data.data;
         });
         console.log('%c ****开始下载图片****', 'color:red');
-        console.log("%c ****\u4E00\u5171".concat(dataList.length, "\u6761\u4EA7\u54C1****"), 'color:red');
-        dataList.forEach(function (item, n) {
+        console.log("%c ****\u4E00\u5171".concat(dataList.length, "\u6761\u6570\u636E****"), 'color:red');
+        dataList.forEach(function (item) {
           var value = JSON.parse(item['5ea1af554f222e0001d9fd97']);
           value.forEach(function (itemList, index) {
-            var ext = itemList.ext;
-            value[index] = itemList.previewUrl.split("?")[0];
-    
-            _this.download(value[index], "".concat(item['5ea1af554f222e0001d9fd8e'], "_").concat(index, ".").concat(ext), n + 1, index + 1);
+            itemList.previewUrl = itemList.previewUrl.split("?")[0];
           });
     
           _this.data.push({
             name: item['5ea1af554f222e0001d9fd8e'],
             value: value
           });
+        });
+        this.downloadFile();
+      },
+      //下载文件   
+      downloadFile: async function downloadFile() {
+        await this.saveFile(this.data[this.number]);
+        this.number < this.data.length ? this.downloadFile() : console.log('%c ****下载最后一个商品附件****', 'color: green');
+      },
+      saveFile: function saveFile(list) {
+        var _this2 = this;
+    
+        this.number++;
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              list.value.forEach(function (item, index) {
+                _this2.download(item.previewUrl, "".concat(list.name, "_").concat(index).concat(item.ext));
+              });
+            }());
+          }, _this2.time);
+        });
+      }
+    };
+    index.init();</code></pre>
+  <h3>5.上传图片</h3>
+  <button class="btn" data-clipboard-action="cut" data-clipboard-target="#js5">一键复制</button>
+  <textarea id="js5">"use strict";
+
+    var index = {
+      init: function init() {
+        this.number = $('.main-right-grid .editableCellCon')[0].classList[2].split('-')[1];
+        this.time = 1000;
+        this.addProductPicture();
+      },
+      //添加附件   
+      addProductPicture: async function addProductPicture() {
+        var table = $('.main-right-grid');
+        var row = table.find(".row-".concat(this.number, ".col-1"));
+        this.text = table.find(".row-".concat(this.number, ".col-4 span")).text();
+        this.has = false;
+        row.click();
+        await this.openProduct();
+        await this.openKnowledge();
+    
+        try {
+          if (!this.has) {
+            await this.folderSearch();
+            await this.selectPicture();
+            await this.enterPictrue();
+            await this.savePicture();
+          }
+        } catch (e) {
+          console.log("%c *****服务器异常重新开始***** ", 'color: red');
+          this.addProductPicture();
+        }
+    
+        await this.clickPicture();
+        this.number++;
+        this.has = true;
+        row.length !== 0 && this.addProductPicture();
+      },
+      //打开产品   
+      openProduct: function openProduct() {
+        var _this = this;
+    
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              console.log("%c *****打开产品***** ", 'color: red');
+              $('.ming.Icon.icon-default.icon.icon-attachment.Font17').eq(0).click();
+            }());
+          }, _this.time * 5);
+        });
+      },
+      //打开知识库
+      openKnowledge: function openKnowledge() {
+        var _this2 = this;
+    
+        this.has = $('.UploadFiles-filesWrapper').is(":visible");
+        if (this.has) return;
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              console.log("%c *****打开知识库***** ", 'color: red');
+              $('.UploadFiles-entrys').find('.flexRow.valignWrapper').eq(1).click();
+            }());
+          }, _this2.time);
+        });
+      },
+      //搜索
+      folderSearch: function folderSearch() {
+        var _this3 = this;
+    
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              console.log("%c *****搜索图片***** ", 'color: red');
+              $('.folderSearch input').val(_this3.text);
+              $('.folderSearch .icon-search').click();
+            }());
+          }, _this3.time);
+        });
+      },
+      //选择图片
+      selectPicture: function selectPicture() {
+        var _this4 = this;
+    
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              console.log("%c *****选择图片***** ", 'color: red');
+              $('.nodeList li').addClass('ThemeBGColor5').attr('nodetype', 2);
+            }());
+          }, _this4.time * 5);
+        });
+      },
+      //确定
+      enterPictrue: function enterPictrue() {
+        var _this5 = this;
+    
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              console.log("%c *****确定选择***** ", 'color: red');
+              $('#folderSelectDialog .yesText.boderRadAll_3.ThemeBGColor3')[0].click();
+            }());
+          }, _this5.time);
+        });
+      },
+      //保存
+      savePicture: function savePicture() {
+        var _this6 = this;
+    
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              console.log("%c *****保存成功***** ", 'color: red');
+              $('.updateRowButton .mRight24')[0].click();
+            }());
+          }, _this6.time * 5);
+        });
+      },
+      //关闭
+      clickPicture: function clickPicture() {
+        var _this7 = this;
+    
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              $('.mui-dialog-close-btn')[0].click();
+            }());
+          }, _this7.time * 5);
+        });
+      }
+    };
+    index.init();</textarea>
+  <pre><code class="js">"use strict";
+
+    var index = {
+      init: function init() {
+        this.number = $('.main-right-grid .editableCellCon')[0].classList[2].split('-')[1];
+        this.time = 1000;
+        this.addProductPicture();
+      },
+      //添加附件   
+      addProductPicture: async function addProductPicture() {
+        var table = $('.main-right-grid');
+        var row = table.find(".row-".concat(this.number, ".col-1"));
+        this.text = table.find(".row-".concat(this.number, ".col-4 span")).text();
+        this.has = false;
+        row.click();
+        await this.openProduct();
+        await this.openKnowledge();
+    
+        try {
+          if (!this.has) {
+            await this.folderSearch();
+            await this.selectPicture();
+            await this.enterPictrue();
+            await this.savePicture();
+          }
+        } catch (e) {
+          console.log("%c *****服务器异常重新开始***** ", 'color: red');
+          this.addProductPicture();
+        }
+    
+        await this.clickPicture();
+        this.number++;
+        this.has = true;
+        row.length !== 0 && this.addProductPicture();
+      },
+      //打开产品   
+      openProduct: function openProduct() {
+        var _this = this;
+    
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              console.log("%c *****打开产品***** ", 'color: red');
+              $('.ming.Icon.icon-default.icon.icon-attachment.Font17').eq(0).click();
+            }());
+          }, _this.time * 5);
+        });
+      },
+      //打开知识库
+      openKnowledge: function openKnowledge() {
+        var _this2 = this;
+    
+        this.has = $('.UploadFiles-filesWrapper').is(":visible");
+        if (this.has) return;
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              console.log("%c *****打开知识库***** ", 'color: red');
+              $('.UploadFiles-entrys').find('.flexRow.valignWrapper').eq(1).click();
+            }());
+          }, _this2.time);
+        });
+      },
+      //搜索
+      folderSearch: function folderSearch() {
+        var _this3 = this;
+    
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              console.log("%c *****搜索图片***** ", 'color: red');
+              $('.folderSearch input').val(_this3.text);
+              $('.folderSearch .icon-search').click();
+            }());
+          }, _this3.time);
+        });
+      },
+      //选择图片
+      selectPicture: function selectPicture() {
+        var _this4 = this;
+    
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              console.log("%c *****选择图片***** ", 'color: red');
+              $('.nodeList li').addClass('ThemeBGColor5').attr('nodetype', 2);
+            }());
+          }, _this4.time * 5);
+        });
+      },
+      //确定
+      enterPictrue: function enterPictrue() {
+        var _this5 = this;
+    
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              console.log("%c *****确定选择***** ", 'color: red');
+              $('#folderSelectDialog .yesText.boderRadAll_3.ThemeBGColor3')[0].click();
+            }());
+          }, _this5.time);
+        });
+      },
+      //保存
+      savePicture: function savePicture() {
+        var _this6 = this;
+    
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              console.log("%c *****保存成功***** ", 'color: red');
+              $('.updateRowButton .mRight24')[0].click();
+            }());
+          }, _this6.time * 5);
+        });
+      },
+      //关闭
+      clickPicture: function clickPicture() {
+        var _this7 = this;
+    
+        return new Promise(function (resolve) {
+          setTimeout(function () {
+            return resolve(function () {
+              $('.mui-dialog-close-btn')[0].click();
+            }());
+          }, _this7.time * 5);
         });
       }
     };

@@ -1,9 +1,11 @@
 const index = {
   init() {
     //请将产品列表替换到这里     
-    this.values = []
+    this.values = ["雪花9号啤酒", "雪花啤酒瓶听喜力啤酒瓶听金威啤酒瓶听", "365全麦精酿啤酒", "痹痛冷敷贴"]
     this.getProductList()
     this.data = []
+    this.number = 0
+    this.time = 1000
   },
   // 获取 blob
   getBlob(url, cb) {
@@ -18,9 +20,7 @@ const index = {
     xhr.send();
   },
   // 保存文件
-  saveAs(blob, filename, n, index) {
-    console.log(`%c ****正在下载第${n}条数据第${index}涨图片!****`, 'color: pink')
-
+  saveAs(blob, filename) {
     if (window.navigator.msSaveOrOpenBlob) {
       navigator.msSaveBlob(blob, filename);
     } else {
@@ -42,10 +42,10 @@ const index = {
     console.log(`%c ****${filename}下载成功!****`, 'color:red')
   },
   // 下载文件
-  download(url, filename, n, index) {
+  download(url, filename) {
     const that = this
-    that.getBlob(url, function (blob) {
-      that.saveAs(blob, filename, n, index);
+    return that.getBlob(url, function (blob) {
+      that.saveAs(blob, filename);
     });
   },
   //获取产品信息
@@ -80,18 +80,32 @@ const index = {
       return data.data.data
     });
     console.log('%c ****开始下载图片****', 'color:red')
-    console.log(`%c ****一共${dataList.length}条产品****`, 'color:red')
-    dataList.forEach((item, n) => {
+    console.log(`%c ****一共${dataList.length}条数据****`, 'color:red')
+    dataList.forEach(item => {
       const value = JSON.parse(item['5ea1af554f222e0001d9fd97'])
       value.forEach((itemList, index) => {
-        const ext = itemList.ext
-        value[index] = itemList.previewUrl.split("?")[0]
-        this.download(value[index], `${item['5ea1af554f222e0001d9fd8e']}_${index}.${ext}`, n + 1, index + 1)
+        itemList.previewUrl = itemList.previewUrl.split("?")[0]
       })
       this.data.push({
         name: item['5ea1af554f222e0001d9fd8e'],
-        value
+        value,
       })
+    })
+    this.downloadFile()
+  },
+  //下载文件   
+  async downloadFile() {
+    await this.saveFile(this.data[this.number])
+    this.number < this.data.length ? this.downloadFile() : console.log('%c ****下载最后一个商品附件****', 'color: green')
+  },
+  saveFile(list) {
+    this.number++
+    return new Promise(resolve => {
+      setTimeout(() => resolve((() => {
+        list.value.forEach((item, index) => {
+          this.download(item.previewUrl, `${list.name}_${index}${item.ext}`)
+        })
+      })()), this.time);
     })
   }
 }
