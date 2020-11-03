@@ -981,12 +981,14 @@ index.init();
       // dialogs2.style.display = 'none';
       // };
       var dialog_ok2 = document.getElementById("dialog_ok2");
+      var timer = null
       var hide = function () {
         dialogs2.style.display = 'none';
         callback && callback();
+        clearTimeout(timer)
       };
       dialog_ok2.onclick = hide
-      setTimeout(hide, 3000)
+      timer = setTimeout(hide, 3000)
     };
 
   </script>
