@@ -42,7 +42,7 @@
 
   <h2>自动化代码</h2>
   <hr>
-  <h4>最新版本：v1.0.4</h4>
+  <h4>最新版本：v1.0.5</h4>
   <h4>更新日期：2020年05月21日16:01:52</h4>
   <pre><code class="text">
   更新日志
@@ -60,7 +60,7 @@
   </pre></code>
   <pre><code class="js">使用方法：打开浏览器 -> 开发者工具 -> 控制台 -> 粘贴代码 -> 点击确定</code></pre>
   <h3>1.流程新增记录</h3>
-  <button class="btn" data-clipboard-action="cut" data-clipboard-target="#js1">一键复制</button>
+  <button class="btn" data-clipboard-target="#js1">一键复制</button>
   <textarea id="js1">"use strict";
 
     var index = {
@@ -183,7 +183,7 @@
     index.init();
   </code></pre>
   <h3>2.流程更新记录</h3>
-  <button class="btn" data-clipboard-action="cut" data-clipboard-target="#js2">一键复制</button>
+  <button class="btn" data-clipboard-target="#js2">一键复制</button>
   <textarea id="js2">"use strict";
 
     var index = {
@@ -371,7 +371,7 @@
     };
     index.init();</code></pre>
   <h3>3.获取产品名称列表</h3>
-  <button class="btn" data-clipboard-action="cut" data-clipboard-target="#js3">一键复制</button>
+  <button class="btn" data-clipboard-target="#js3">一键复制</button>
   <textarea id="js3">"use strict";
 
 var index = {
@@ -668,7 +668,7 @@ index.init();
     };
     index.init();</code></pre>
   <h3>5.上传图片</h3>
-  <button class="btn" data-clipboard-action="cut" data-clipboard-target="#js5">一键复制</button>
+  <button class="btn" data-clipboard-target="#js5">一键复制</button>
   <textarea id="js5">"use strict";
 
     var index = {
@@ -936,8 +936,9 @@ index.init();
       console.info('Action:', e.action);
       console.info('Text:', e.text);
       console.info('Trigger:', e.trigger);
-      e.trigger.innerText = '复制成功'
-      e.clearSelection();
+      alert('复制成功')
+      // e.trigger.innerText = '复制成功'
+      // e.clearSelection();
     });
 
   </script>
