@@ -44,10 +44,12 @@
 
   <h2>自动化代码</h2>
   <hr>
-  <h4>最新版本：v1.0.5</h4>
-  <h4>更新日期：2020年11月10日15:14:41</h4>
+  <h4>最新版本：v1.0.6</h4>
+  <h4>更新日期：2021-03-17 19:02:21</h4>
   <pre><code class="text">
   更新日志
+  v1.0.6
+    1.新增状态管理
   v1.0.5
     1.更新复制成功提示
   v1.0.4
@@ -933,6 +935,287 @@ index.init();
       }
     };
     index.init();</code></pre>
+    <h3>5.上传图片</h3>
+    <button class="btn" data-clipboard-target="#js5">一键复制</button>
+  <textarea id="js6">
+    let index = {
+      init() {
+        this.arrList = []
+        this.arrNumber = 0
+        this.timer = 5000
+        this.log = null
+        this.status = null
+        this.find = false
+        // 获取当前待处理列表
+        this.getList()
+      },
+      // 获取待处理
+      getList() {
+        const list = document.querySelectorAll('.col-5')
+        list.forEach(item => {
+          if (item.innerText === '待处理')
+            this.arrList.push(item)
+        })
+        console.log(`%c ***** 当前页一共${list.length - 1} 条数据，其中${this.arrList.length}条待处理*****`, 'color: red')
+        this.startHandler()
+      },
+      // 处理数据
+      startHandler() {
+        console.log(`%c ***** 开始处理第${this.arrNumber + 1}条数据 *****`, 'color: green')
+        if (this.arrList[this.arrNumber]) {
+          this.arrList[this.arrNumber].click()
+          console.log(`%c ***** 打开详情页数据 *****`, 'color: orange')
+          setTimeout(() => {
+            this.findInfo()
+          }, this.timer)
+        }
+        console.log(`%c ***** 处理结束！！！！ *****`, 'color: green')
+      },
+      // 查询日志
+      findInfo() {
+        const getHeader = document.querySelector('.header')
+        getHeader.querySelectorAll('span')[1].click()
+        setTimeout(() => {
+          this.findInfoItem()
+        }, this.timer / 2)
+      },
+      // 查询最后一条日志
+      findInfoItem() {
+        const logList = document.querySelectorAll('.logItem')
+        console.log(`%c ***** 一共查询到${logList.length}条操作日志 *****`, 'color: red')
+        logList.forEach((item, index) => {
+          if (item.innerText.indexOf('昨天 16:5') !== -1 && item.innerText.indexOf('@陈泽浩') !== -1) {
+            this.find = true
+            item.style.border = " 2px solid red"
+          }
+          if (this.find) {
+            if (item.innerText.indexOf('商品资质审批状态的“单选下拉菜单”字段的内容') !== -1 && !this.log) {
+              this.log = item.querySelector('.logContent').innerText
+              this.status = this.log.split('改为')[1].split('；')[0].trim()
+              item.style.border = " 2px solid red"
+              item.style.background = "red"
+              item.style.color = "#fff"
+              console.log(`%c ***** 第${index + 1}条操作日志操作了商品资质审批状态 *****`, 'color: red')
+    
+              console.log(`%c ***** 操作日志内容为:${this.log} *****`, 'color:yellow')
+              console.log(`%c ***** 操作目标为:${this.status} *****`, 'color:orange')
+            }
+          }
+    
+        })
+    
+        if (!this.status) {
+          document.querySelector('.mui-dialog-close-btn').click()
+          this.arrNumber++
+          this.arrList = []
+          this.log = null
+          this.status = null
+          this.find = false
+          this.getList()
+          return
+        }
+    
+        setTimeout(() => {
+          this.setSelectStatus()
+        }, this.timer)
+    
+      },
+      // 设置状态
+      setSelectStatus() {
+        const formItemList = document.querySelectorAll('.customFormItem')
+        let formItem = null
+        formItemList.forEach(item => {
+          if (item.innerText.indexOf('商品资质审批状态') !== -1) {
+            formItem = item
+            return
+          }
+        })
+    
+        const selectItem = formItem.querySelector('.customFormItemControl .ant-select-selector')
+        var evObj = document.createEvent('MouseEvents')
+        evObj.initMouseEvent('mousedown', true, true, window)
+        selectItem.dispatchEvent(evObj)
+    
+        setTimeout(() => {
+          this.selectChange()
+        }, this.timer)
+      },
+      // 选择内容
+      selectChange() {
+        const selectItem = document.querySelector('.ant-select-dropdown')
+        const item = selectItem.querySelectorAll('.ant-select-item')
+        item.forEach(item => {
+          if (item.innerText === this.status) {
+            item.click()
+            return
+          }
+        })
+    
+        setTimeout(() => {
+          this.submit()
+        }, this.timer / 2)
+    
+      },
+      // 保存
+      submit() {
+        const button = document.querySelector('.updateRowButton')
+        const buttonEnter = button.querySelector('.Button--primary')
+        buttonEnter.click()
+    
+        setTimeout(() => {
+          this.arrNumber++
+          this.arrList = []
+          this.log = null
+          this.status = null
+          this.find = false
+          this.getList()
+        }, this.timer)
+    
+      }
+    }
+    index.init()
+    </textarea>
+    <pre>
+      <code class="js">
+        let index = {
+          init() {
+            this.arrList = []
+            this.arrNumber = 0
+            this.timer = 5000
+            this.log = null
+            this.status = null
+            this.find = false
+            // 获取当前待处理列表
+            this.getList()
+          },
+          // 获取待处理
+          getList() {
+            const list = document.querySelectorAll('.col-5')
+            list.forEach(item => {
+              if (item.innerText === '待处理')
+                this.arrList.push(item)
+            })
+            console.log(`%c ***** 当前页一共${list.length - 1} 条数据，其中${this.arrList.length}条待处理*****`, 'color: red')
+            this.startHandler()
+          },
+          // 处理数据
+          startHandler() {
+            console.log(`%c ***** 开始处理第${this.arrNumber + 1}条数据 *****`, 'color: green')
+            if (this.arrList[this.arrNumber]) {
+              this.arrList[this.arrNumber].click()
+              console.log(`%c ***** 打开详情页数据 *****`, 'color: orange')
+              setTimeout(() => {
+                this.findInfo()
+              }, this.timer)
+            }
+            console.log(`%c ***** 处理结束！！！！ *****`, 'color: green')
+          },
+          // 查询日志
+          findInfo() {
+            const getHeader = document.querySelector('.header')
+            getHeader.querySelectorAll('span')[1].click()
+            setTimeout(() => {
+              this.findInfoItem()
+            }, this.timer / 2)
+          },
+          // 查询最后一条日志
+          findInfoItem() {
+            const logList = document.querySelectorAll('.logItem')
+            console.log(`%c ***** 一共查询到${logList.length}条操作日志 *****`, 'color: red')
+            logList.forEach((item, index) => {
+              if (item.innerText.indexOf('昨天 16:5') !== -1 && item.innerText.indexOf('@陈泽浩') !== -1) {
+                this.find = true
+                item.style.border = " 2px solid red"
+              }
+              if (this.find) {
+                if (item.innerText.indexOf('商品资质审批状态的“单选下拉菜单”字段的内容') !== -1 && !this.log) {
+                  this.log = item.querySelector('.logContent').innerText
+                  this.status = this.log.split('改为')[1].split('；')[0].trim()
+                  item.style.border = " 2px solid red"
+                  item.style.background = "red"
+                  item.style.color = "#fff"
+                  console.log(`%c ***** 第${index + 1}条操作日志操作了商品资质审批状态 *****`, 'color: red')
+        
+                  console.log(`%c ***** 操作日志内容为:${this.log} *****`, 'color:yellow')
+                  console.log(`%c ***** 操作目标为:${this.status} *****`, 'color:orange')
+                }
+              }
+        
+            })
+        
+            if (!this.status) {
+              document.querySelector('.mui-dialog-close-btn').click()
+              this.arrNumber++
+              this.arrList = []
+              this.log = null
+              this.status = null
+              this.find = false
+              this.getList()
+              return
+            }
+        
+            setTimeout(() => {
+              this.setSelectStatus()
+            }, this.timer)
+        
+          },
+          // 设置状态
+          setSelectStatus() {
+            const formItemList = document.querySelectorAll('.customFormItem')
+            let formItem = null
+            formItemList.forEach(item => {
+              if (item.innerText.indexOf('商品资质审批状态') !== -1) {
+                formItem = item
+                return
+              }
+            })
+        
+            const selectItem = formItem.querySelector('.customFormItemControl .ant-select-selector')
+            var evObj = document.createEvent('MouseEvents')
+            evObj.initMouseEvent('mousedown', true, true, window)
+            selectItem.dispatchEvent(evObj)
+        
+            setTimeout(() => {
+              this.selectChange()
+            }, this.timer)
+          },
+          // 选择内容
+          selectChange() {
+            const selectItem = document.querySelector('.ant-select-dropdown')
+            const item = selectItem.querySelectorAll('.ant-select-item')
+            item.forEach(item => {
+              if (item.innerText === this.status) {
+                item.click()
+                return
+              }
+            })
+        
+            setTimeout(() => {
+              this.submit()
+            }, this.timer / 2)
+        
+          },
+          // 保存
+          submit() {
+            const button = document.querySelector('.updateRowButton')
+            const buttonEnter = button.querySelector('.Button--primary')
+            buttonEnter.click()
+        
+            setTimeout(() => {
+              this.arrNumber++
+              this.arrList = []
+              this.log = null
+              this.status = null
+              this.find = false
+              this.getList()
+            }, this.timer)
+        
+          }
+        }
+        index.init()
+      </code>
+
+    </pre>
   <script>
     var clipboard = new ClipboardJS('.btn');
 
