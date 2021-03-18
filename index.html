@@ -942,12 +942,20 @@ index.init();
       init() {
         this.arrList = []
         this.arrNumber = 0
-        this.timer = 3000
+        this.timer = 2000
         this.log = null
         this.status = null
         this.find = false
         // 获取当前待处理列表
-        this.getList()
+        this.nextPage()
+      },
+      // 切换到下一页
+      nextPage() {
+        const nextButton = document.querySelector('.sc-bdVaJa.jSejjJ')
+        nextButton.querySelectorAll('.sc-htpNat.bIDsIe')[1].click()
+        setTimeout(() => {
+          this.getList()
+        }, this.timer)
       },
       // 获取待处理
       getList() {
@@ -968,8 +976,18 @@ index.init();
           setTimeout(() => {
             this.findInfo()
           }, this.timer)
+        } else {
+          document.querySelector('.refresh').click()
+          setTimeout(() => {
+            this.arrNumber = 0
+            this.arrList = []
+            this.log = null
+            this.status = null
+            this.find = false
+            this.nextPage()
+          }, this.timer + 1000)
+          console.log(`%c ***** 处理结束！！！！ *****`, 'color: green')
         }
-        console.log(`%c ***** 处理结束！！！！ *****`, 'color: green')
       },
       // 查询日志
       findInfo() {
@@ -977,14 +995,14 @@ index.init();
         getHeader.querySelectorAll('span')[1].click()
         setTimeout(() => {
           this.findInfoItem()
-        }, this.timer / 2)
+        }, this.timer)
       },
       // 查询最后一条日志
       findInfoItem() {
         const logList = document.querySelectorAll('.logItem')
         console.log(`%c ***** 一共查询到${logList.length}条操作日志 *****`, 'color: red')
         logList.forEach((item, index) => {
-          if (item.innerText.indexOf('昨天 16:5') !== -1 && item.innerText.indexOf('@陈泽浩') !== -1) {
+          if (item.innerText.indexOf('3月16日 16:5') !== -1 && item.innerText.indexOf('@陈泽浩') !== -1) {
             this.find = true
             item.style.border = " 2px solid red"
           }
@@ -1038,7 +1056,7 @@ index.init();
     
         setTimeout(() => {
           this.selectChange()
-        }, this.timer)
+        }, this.timer / 2)
       },
       // 选择内容
       selectChange() {
@@ -1081,12 +1099,20 @@ index.init();
           init() {
             this.arrList = []
             this.arrNumber = 0
-            this.timer = 3000
+            this.timer = 2000
             this.log = null
             this.status = null
             this.find = false
             // 获取当前待处理列表
-            this.getList()
+            this.nextPage()
+          },
+          // 切换到下一页
+          nextPage() {
+            const nextButton = document.querySelector('.sc-bdVaJa.jSejjJ')
+            nextButton.querySelectorAll('.sc-htpNat.bIDsIe')[1].click()
+            setTimeout(() => {
+              this.getList()
+            }, this.timer)
           },
           // 获取待处理
           getList() {
@@ -1107,8 +1133,18 @@ index.init();
               setTimeout(() => {
                 this.findInfo()
               }, this.timer)
+            } else {
+              document.querySelector('.refresh').click()
+              setTimeout(() => {
+                this.arrNumber = 0
+                this.arrList = []
+                this.log = null
+                this.status = null
+                this.find = false
+                this.nextPage()
+              }, this.timer + 1000)
+              console.log(`%c ***** 处理结束！！！！ *****`, 'color: green')
             }
-            console.log(`%c ***** 处理结束！！！！ *****`, 'color: green')
           },
           // 查询日志
           findInfo() {
@@ -1116,14 +1152,14 @@ index.init();
             getHeader.querySelectorAll('span')[1].click()
             setTimeout(() => {
               this.findInfoItem()
-            }, this.timer / 2)
+            }, this.timer)
           },
           // 查询最后一条日志
           findInfoItem() {
             const logList = document.querySelectorAll('.logItem')
             console.log(`%c ***** 一共查询到${logList.length}条操作日志 *****`, 'color: red')
             logList.forEach((item, index) => {
-              if (item.innerText.indexOf('昨天 16:5') !== -1 && item.innerText.indexOf('@陈泽浩') !== -1) {
+              if (item.innerText.indexOf('3月16日 16:5') !== -1 && item.innerText.indexOf('@陈泽浩') !== -1) {
                 this.find = true
                 item.style.border = " 2px solid red"
               }
@@ -1177,7 +1213,7 @@ index.init();
         
             setTimeout(() => {
               this.selectChange()
-            }, this.timer)
+            }, this.timer / 2)
           },
           // 选择内容
           selectChange() {
