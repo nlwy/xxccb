@@ -946,6 +946,7 @@ index.init();
         this.log = null
         this.status = null
         this.find = false
+        this.scrollTopUP = 0
         // 获取当前待处理列表
         this.nextPage()
       },
@@ -994,30 +995,57 @@ index.init();
         const getHeader = document.querySelector('.header')
         getHeader.querySelectorAll('span')[1].click()
         setTimeout(() => {
-          this.findInfoItem()
+          this.scrollTop()
         }, this.timer)
+      },
+      // 滚动处理
+      scrollTop() {
+        const scrollContent = document.querySelector('.discussLogFile .nano-content')
+        this.scrollTopUP = scrollContent.scrollTop
+        scrollContent.scrollTop += 1000
+        console.log(`%c ***** 滚动距离${scrollContent.scrollTop} *****`, 'color: red')
+        console.log(`%c ***** 当前距离${this.scrollTopUP} *****`, 'color: orange')
+        if (scrollContent.scrollTop === this.scrollTopUP) {
+          console.log(`%c ***** 已经滚动到底部 开始执行 *****`, 'color: pink')
+          setTimeout(() => {
+            this.findInfoItem()
+          }, this.timer)
+        } else {
+          setTimeout(() => {
+            this.scrollTop()
+          }, this.timer)
+        }
+    
       },
       // 查询最后一条日志
       findInfoItem() {
         const logList = document.querySelectorAll('.logItem')
         console.log(`%c ***** 一共查询到${logList.length}条操作日志 *****`, 'color: red')
         logList.forEach((item, index) => {
-          if (item.innerText.indexOf('3月16日 16:5') !== -1 && item.innerText.indexOf('@陈泽浩') !== -1) {
-            this.find = true
+          if (item.innerText.indexOf('@陈泽浩') !== -1) {
+            // this.find = true
+            this.log = null
             item.style.border = " 2px solid red"
           }
-          if (this.find) {
-            if (item.innerText.indexOf('商品资质审批状态的“单选下拉菜单”字段的内容') !== -1 && !this.log) {
-              this.log = item.querySelector('.logContent').innerText
-              this.status = this.log.split('改为')[1].split('；')[0].trim()
-              item.style.border = " 2px solid red"
-              item.style.background = "red"
-              item.style.color = "#fff"
-              console.log(`%c ***** 第${index + 1}条操作日志操作了商品资质审批状态 *****`, 'color: red')
+          // if (this.find) {
+          if (item.innerText.indexOf('商品资质审批状态的“单选下拉菜单”字段的内容') !== -1) {
     
-              console.log(`%c ***** 操作日志内容为:${this.log} *****`, 'color:yellow')
-              console.log(`%c ***** 操作目标为:${this.status} *****`, 'color:orange')
+            item.style.border = " 2px solid red"
+            item.style.background = "red"
+            item.style.color = "#fff"
+    
+            if (!this.log) {
+              item.style.border = " 2px solid green"
+              item.style.background = "green"
+              this.log = item.querySelector('.logContent').innerText
+              this.status = this.log.split('改为')[1].split('；')[0].trim().replace('（已处理）', '')
             }
+    
+            console.log(`%c ***** 第${index + 1}条操作日志操作了商品资质审批状态 *****`, 'color: red')
+    
+            console.log(`%c ***** 操作日志内容为:${this.log} *****`, 'color:yellow')
+            console.log(`%c ***** 操作目标为:${this.status} *****`, 'color:orange')
+            // }
           }
     
         })
@@ -1068,7 +1096,6 @@ index.init();
             return
           }
         })
-    
         setTimeout(() => {
           this.submit()
         }, this.timer / 2)
@@ -1103,6 +1130,7 @@ index.init();
             this.log = null
             this.status = null
             this.find = false
+            this.scrollTopUP = 0
             // 获取当前待处理列表
             this.nextPage()
           },
@@ -1151,30 +1179,57 @@ index.init();
             const getHeader = document.querySelector('.header')
             getHeader.querySelectorAll('span')[1].click()
             setTimeout(() => {
-              this.findInfoItem()
+              this.scrollTop()
             }, this.timer)
+          },
+          // 滚动处理
+          scrollTop() {
+            const scrollContent = document.querySelector('.discussLogFile .nano-content')
+            this.scrollTopUP = scrollContent.scrollTop
+            scrollContent.scrollTop += 1000
+            console.log(`%c ***** 滚动距离${scrollContent.scrollTop} *****`, 'color: red')
+            console.log(`%c ***** 当前距离${this.scrollTopUP} *****`, 'color: orange')
+            if (scrollContent.scrollTop === this.scrollTopUP) {
+              console.log(`%c ***** 已经滚动到底部 开始执行 *****`, 'color: pink')
+              setTimeout(() => {
+                this.findInfoItem()
+              }, this.timer)
+            } else {
+              setTimeout(() => {
+                this.scrollTop()
+              }, this.timer)
+            }
+        
           },
           // 查询最后一条日志
           findInfoItem() {
             const logList = document.querySelectorAll('.logItem')
             console.log(`%c ***** 一共查询到${logList.length}条操作日志 *****`, 'color: red')
             logList.forEach((item, index) => {
-              if (item.innerText.indexOf('3月16日 16:5') !== -1 && item.innerText.indexOf('@陈泽浩') !== -1) {
-                this.find = true
+              if (item.innerText.indexOf('@陈泽浩') !== -1) {
+                // this.find = true
+                this.log = null
                 item.style.border = " 2px solid red"
               }
-              if (this.find) {
-                if (item.innerText.indexOf('商品资质审批状态的“单选下拉菜单”字段的内容') !== -1 && !this.log) {
-                  this.log = item.querySelector('.logContent').innerText
-                  this.status = this.log.split('改为')[1].split('；')[0].trim()
-                  item.style.border = " 2px solid red"
-                  item.style.background = "red"
-                  item.style.color = "#fff"
-                  console.log(`%c ***** 第${index + 1}条操作日志操作了商品资质审批状态 *****`, 'color: red')
+              // if (this.find) {
+              if (item.innerText.indexOf('商品资质审批状态的“单选下拉菜单”字段的内容') !== -1) {
         
-                  console.log(`%c ***** 操作日志内容为:${this.log} *****`, 'color:yellow')
-                  console.log(`%c ***** 操作目标为:${this.status} *****`, 'color:orange')
+                item.style.border = " 2px solid red"
+                item.style.background = "red"
+                item.style.color = "#fff"
+        
+                if (!this.log) {
+                  item.style.border = " 2px solid green"
+                  item.style.background = "green"
+                  this.log = item.querySelector('.logContent').innerText
+                  this.status = this.log.split('改为')[1].split('；')[0].trim().replace('（已处理）', '')
                 }
+        
+                console.log(`%c ***** 第${index + 1}条操作日志操作了商品资质审批状态 *****`, 'color: red')
+        
+                console.log(`%c ***** 操作日志内容为:${this.log} *****`, 'color:yellow')
+                console.log(`%c ***** 操作目标为:${this.status} *****`, 'color:orange')
+                // }
               }
         
             })
@@ -1225,7 +1280,6 @@ index.init();
                 return
               }
             })
-        
             setTimeout(() => {
               this.submit()
             }, this.timer / 2)
